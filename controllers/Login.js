@@ -1,5 +1,6 @@
 const mysql=require('../models/db.js');
 const bcrypt=require('bcrypt');
+const jwt=require('jsonwebtoken');
 
 
 const Login=(req,res)=>{
@@ -17,7 +18,18 @@ const Login=(req,res)=>{
     bcrypt.compare(password,hashuserpassword,(err2,matcheduser)=>{
         if(err2) return res.status(502).json({success:false,message:'something went wrong',error:err2});
         if(!matcheduser) return res.status(404).json({success:false,message:'Password not match'});
-        else return res.status(200).json({success:true,message:'Login Successfull'});
+        else{
+          //create jwt key here --------->
+          const token=jwt.sign({userid:userobj.id,useremail:userobj.email},'Shiv@3923',{expiresIn:'24hr'});
+          return res.status(200).json(
+            {
+            success:true,
+            message:'Login Successfull',
+            usertoken:token
+          }
+          );
+        } 
+        
     })
   })
 }
