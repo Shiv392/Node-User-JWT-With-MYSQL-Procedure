@@ -1,6 +1,8 @@
 const mysql=require('../models/db.js');
 const bcrypt=require('bcrypt');
 const jwt=require('jsonwebtoken');
+const dotenv=require('dotenv');
+dotenv.config();
 
 
 const Login=(req,res)=>{
@@ -20,7 +22,7 @@ const Login=(req,res)=>{
         if(!matcheduser) return res.status(404).json({success:false,message:'Password not match'});
         else{
           //create jwt key here --------->
-          const token=jwt.sign({userid:userobj.id,useremail:userobj.email},'Shiv@3923',{expiresIn:'24hr'});
+          const token=jwt.sign({userid:userobj.id,useremail:userobj.email},process.env.JWT_PASSKEY,{expiresIn:'24hr'});
           return res.status(200).json(
             {
             success:true,
